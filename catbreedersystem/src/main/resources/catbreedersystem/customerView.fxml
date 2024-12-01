@@ -4,32 +4,6 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.VBox?>
 
-<<<<<<< HEAD
-<VBox xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="catbreedersystem.CustomerController" spacing="10" alignment="CENTER" style="-fx-background-color: #f9f9f9; -fx-padding: 20;">
-    <Label text="Customer Dashboard" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2e2e2e;" />
-
-    <Label text="Available Cats" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #333333;" />
-    <ListView fx:id="availableCatListView" maxWidth="300" maxHeight="150"
-              style="-fx-border-color: #cccccc; -fx-border-width: 2; -fx-border-radius: 5; -fx-padding: 5;"/>
-
-    <Button text="Reserve Cat" onAction="#handleReserveCat" maxWidth="200"
-            style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;"/>
-    <Button text="Cancel Reservation" onAction="#handleCancelReservation" maxWidth="200"
-            style="-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;"/>
-
-
-    <Label text="My Reservations" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #333333;" />
-    <ListView fx:id="reservationListView" maxWidth="300" maxHeight="150"
-              style="-fx-border-color: #cccccc; -fx-border-width: 2; -fx-border-radius: 5; -fx-padding: 5;"/>
-
-    <Label text="My Profile" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #333333;" />
-    <Button text="View Profile" onAction="#handleViewProfile" maxWidth="200"
-            style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;"/>
-    <Button text="Update Profile" onAction="#handleUpdateProfile" maxWidth="200"
-            style="-fx-background-color: #FFC107; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;"/>
-</VBox>
-=======
 <VBox xmlns:fx="http://javafx.com/fxml/1" fx:controller="catbreedersystem.CustomerController">
     <VBox spacing="10">
         <Label text="Available Cats" />
@@ -43,4 +17,3 @@
     </VBox>
 </VBox>
 
->>>>>>> cf6da71 (updates for features)

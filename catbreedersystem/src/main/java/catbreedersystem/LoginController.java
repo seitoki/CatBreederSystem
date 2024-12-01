@@ -18,11 +18,6 @@ public class LoginController {
 
     @FXML
     private TextField userIdField;
-<<<<<<< HEAD
-    //@FXML
-=======
-
->>>>>>> cf6da71 (updates for features)
     @FXML
     private TextField emailField;
 

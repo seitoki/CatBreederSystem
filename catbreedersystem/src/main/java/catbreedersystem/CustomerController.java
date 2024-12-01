@@ -1,42 +1,111 @@
 package catbreedersystem;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ListView;
+import javafx.stage.Stage;
 
 public class CustomerController {
 
     @FXML
-    private ListView<Cat> availableCatListView;
+    private ListView<Cat> availableCatsListView;
 
     @FXML
-    private ListView<Reservation> reservationListView;
+    private ListView<Reservation> myReservationsListView;
 
-    private Customer currentCustomer;
     private final ObservableList<Cat> availableCats = FXCollections.observableArrayList();
-    private final ObservableList<Reservation> reservations = FXCollections.observableArrayList();
+    private final ObservableList<Reservation> myReservations = FXCollections.observableArrayList();
+    private String currentUserID; 
 
-    public void initialize(Customer customer) {
-        this.currentCustomer = customer;
-        availableCats.addAll(currentCustomer.viewAvaliableCats(Cat.cats));
-        availableCatListView.setItems(availableCats);
-        reservationListView.setItems(reservations);
+    public void initialize() {
+        availableCatsListView.setItems(availableCats);
+        myReservationsListView.setItems(myReservations);
+
+        loadAvailableCats();
+        loadMyReservations();
+    }
+
+    public void setCurrentUserID(String userID) {
+        this.currentUserID = userID;
+    }
+
+    private void loadAvailableCats() {
+        try (Connection connection = DatabaseConnection.getConnection();
+             Statement statement = connection.createStatement()) {
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM Cat WHERE availability = true");
+            while (resultSet.next()) {
+                Cat cat = new Cat(
+                    resultSet.getString("catID"),
+                    resultSet.getString("name"),
+                    resultSet.getString("birthdate"),
+                    resultSet.getString("gender"),
+                    resultSet.getString("color"),
+                    resultSet.getInt("price"),
+                    resultSet.getBoolean("availability")
+                );
+                availableCats.add(cat);
+            }
+        } catch (Exception e) {
+            showAlert("Error", "Failed to load available cats: " + e.getMessage());
+        }
+    }
+
+    private void loadMyReservations() {
+        try (Connection connection = DatabaseConnection.getConnection();
+             Statement statement = connection.createStatement()) {
+            String query = "SELECT r.reserveID, r.catID, r.reserveDate, c.name " +
+                           "FROM Reservation r " +
+                           "JOIN Cat c ON r.catID = c.catID " +
+                           "WHERE r.userID = '" + currentUserID + "'";
+            ResultSet resultSet = statement.executeQuery(query);
+            while (resultSet.next()) {
+                Reservation reservation = new Reservation(
+                    resultSet.getString("reserveID"),
+                    resultSet.getString("catID"),
+                    currentUserID,
+                    resultSet.getDate("reserveDate").toString()
+                );
+                myReservations.add(reservation);
+            }
+        } catch (Exception e) {
+            showAlert("Error", "Failed to load reservations: " + e.getMessage());
+        }
     }
 
     @FXML
     private void handleReserveCat() {
-        Cat selectedCat = availableCatListView.getSelectionModel().getSelectedItem();
+        Cat selectedCat = availableCatsListView.getSelectionModel().getSelectedItem();
         if (selectedCat != null) {
-            Reservation reservation = currentCustomer.reserveCat(selectedCat, "2024-11-20");  // Example date
-            if (reservation != null) {
-                reservations.add(reservation);
+            try (Connection connection = DatabaseConnection.getConnection();
+                 Statement statement = connection.createStatement()) {
+                String reserveID = "R" + (myReservations.size() + 1);
+                String query = "INSERT INTO Reservation (reserveID, catID, userID, reserveDate) VALUES " +
+                               "('" + reserveID + "', '" + selectedCat.getCatID() + "', '" + currentUserID + "', CURDATE())";
+                statement.executeUpdate(query);
+
+                Reservation newReservation = new Reservation(
+                    reserveID,
+                    selectedCat.getCatID(),
+                    currentUserID,
+                    java.time.LocalDate.now().toString()
+                );
+                myReservations.add(newReservation);
                 availableCats.remove(selectedCat);
-                showAlert("Reservation Successful", "You have reserved the selected cat.");
-            } else {
-                showAlert("Reservation Failed", "The selected cat is not available.");
+
+                statement.executeUpdate("UPDATE Cat SET availability = false WHERE catID = '" + selectedCat.getCatID() + "'");
+
+                showAlert("Success", "Cat reserved successfully!");
+            } catch (Exception e) {
+                showAlert("Error", "Failed to reserve cat: " + e.getMessage());
             }
         } else {
             showAlert("No Selection", "Please select a cat to reserve.");
@@ -45,31 +114,42 @@ public class CustomerController {
 
     @FXML
     private void handleCancelReservation() {
-        Reservation selectedReservation = reservationListView.getSelectionModel().getSelectedItem();
+        Reservation selectedReservation = myReservationsListView.getSelectionModel().getSelectedItem();
         if (selectedReservation != null) {
-            currentCustomer.cancelReservation(selectedReservation.getReserveID());
-            reservations.remove(selectedReservation);
-            showAlert("Reservation Canceled", "The selected reservation has been canceled.");
+            try (Connection connection = DatabaseConnection.getConnection();
+                 Statement statement = connection.createStatement()) {
+                String query = "DELETE FROM Reservation WHERE reserveID = '" + selectedReservation.getReserveID() + "'";
+                statement.executeUpdate(query);
+
+                myReservations.remove(selectedReservation);
+
+                statement.executeUpdate("UPDATE Cat SET availability = true WHERE catID = '" + selectedReservation.getCatID() + "'");
+                showAlert("Success", "Reservation cancelled successfully!");
+            } catch (Exception e) {
+                showAlert("Error", "Failed to cancel reservation: " + e.getMessage());
+            }
         } else {
             showAlert("No Selection", "Please select a reservation to cancel.");
         }
     }
 
-    @FXML
-    private void handleViewProfile() {
-        showAlert("Profile", "Customer Profile:\nName: " + currentCustomer.name +
-                "\nEmail: " + currentCustomer.email + "\nPhone: " + currentCustomer.phone);
-    }
 
     @FXML
-    private void handleUpdateProfile() {
-        // Example: Updating the profile with sample data
-        currentCustomer.updateProfile("Updated Name", "updatedemail@example.com", "1234567890");
-        showAlert("Profile Updated", "Your profile has been updated.");
+    public void handleViewProfile(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("profileview.fxml"));
+            Scene scene = new Scene(loader.load());
+
+            Stage stage = new Stage();
+            stage.setTitle("Profile View");
+            stage.setScene(scene);
+            stage.show();
+        } catch (Exception e) {
+        }
     }
 
     private void showAlert(String title, String message) {
-        Alert alert = new Alert(AlertType.INFORMATION);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
         alert.setContentText(message);
         alert.showAndWait();

@@ -6,20 +6,20 @@ import java.util.List;
 public class Cat {
     protected String catID;
     protected String name;
-    protected int age;
+    protected String birth;
     protected String gender;
     protected String color;
     private int price;
     protected boolean availability;
     static final List<Cat> cats = new ArrayList<>();
 
-    public Cat(String catID, String name, int age, String gender, String color, int price, boolean availability) {
+    public Cat(String catID, String name, String birth, String gender, String color, int price, boolean availability) {
         if (!isUniqueCatID(catID)) {
             throw new IllegalArgumentException("Duplicate catID found.");
         }
         this.catID = catID;
         this.name = name;
-        this.age = age;
+        this.birth = birth;
         this.gender = gender;
         this.color = color;
         this.price = price;
@@ -27,12 +27,12 @@ public class Cat {
         cats.add(this);
     }
 
-    public void updateCat(int newPrice, boolean availability, String newName, String newColor, int newAge, String newGender) {
+    public void updateCat(int newPrice, boolean availability, String newName, String newColor, String birth, String newGender) {
         this.price = newPrice;
         this.availability = availability;
         this.name = newName;
         this.color = newColor;
-        this.age = newAge;
+        this.birth = birth;
         this.gender = newGender;
     }
 
@@ -42,7 +42,31 @@ public class Cat {
 
     @Override
     public String toString() {
-        return "Cat{catID=" + catID + ", name=" + name + ", age=" + age + ", gender=" + gender + 
+        return "Cat{catID=" + catID + ", name=" + name + ", birth=" + birth + ", gender=" + gender + 
                ", color=" + color + ", price=" + price + ", availability=" + availability + "}";
+    }
+
+    public String getCatID() {
+        return this.catID;
+    }
+
+    public Object getName() {
+        return this.name;
+    }
+
+    public String getBirthdate() {
+        return this.birth;
+    }
+
+    public String getGender() {
+        return this.gender;
+    }
+
+    public String getColor() {
+        return this.color;
+    }
+
+    public int getPrice() {
+        return this.price;
     }
 }

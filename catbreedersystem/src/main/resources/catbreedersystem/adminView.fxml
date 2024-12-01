@@ -2,15 +2,34 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.VBox?>
 
 <VBox xmlns:fx="http://javafx.com/fxml/1" fx:controller="catbreedersystem.AdminController" spacing="10" alignment="CENTER">
     <Label text="Admin Dashboard" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
 
-    <Button text="Add Cat" onAction="#handleAddCat" maxWidth="200"/>
+    <Button text="Add Cat" onAction="#toggleAddCatFields" maxWidth="200"/>
+    <VBox fx:id="addCatFields" spacing="5" visible="false" managed="false">
+        <TextField fx:id="catNameField" promptText="Cat Name" />
+        <TextField fx:id="catBirthdateField" promptText="Cat Birthdate" />
+        <TextField fx:id="catGenderField" promptText="Cat Gender (Male/Female)" />
+        <TextField fx:id="catColorField" promptText="Cat Color" />
+        <TextField fx:id="catPriceField" promptText="Cat Price" />
+        <Button text="Submit New Cat" onAction="#handleAddCat" />
+    </VBox>
+
     <Button text="Delete Cat" onAction="#handleDeleteCat" maxWidth="200"/>
-    <Button text="Update Cat" onAction="#handleUpdateCat" maxWidth="200"/>
     
+    <Button text="Update Cat" onAction="#toggleUpdateCatFields" maxWidth="200"/>
+    <VBox fx:id="updateCatFields" spacing="5" visible="false" managed="false">
+        <TextField fx:id="updateCatNameField" promptText="New Cat Name" />
+        <TextField fx:id="updateCatBirthdateField" promptText="New Cat Birthdate" />
+        <TextField fx:id="updateCatGenderField" promptText="New Cat Gender (Male/Female)" />
+        <TextField fx:id="updateCatColorField" promptText="New Cat Color" />
+        <TextField fx:id="updateCatPriceField" promptText="New Cat Price" />
+        <Button text="Submit Update" onAction="#handleUpdateCat" />
+    </VBox>
+
     <Label text="All Cats" style="-fx-font-size: 14px; -fx-font-weight: bold;" />
     <ListView fx:id="catListView" maxWidth="300" maxHeight="150"/>
 

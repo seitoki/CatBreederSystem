@@ -26,4 +26,8 @@ public class Reservation {
     public String getReserveID() {
         return reserveID;
     }
+
+    public String getCatID() {
+        return this.catID;
+    }
 }

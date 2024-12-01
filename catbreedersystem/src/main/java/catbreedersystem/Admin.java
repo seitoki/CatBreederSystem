@@ -22,8 +22,8 @@ public class Admin extends User {
         }
     }
 
-    public void updateCat(Cat cat, int price, boolean availability, String name, String color, int age, String gender) {
-        cat.updateCat(price, availability, name, color, age, gender);
+    public void updateCat(Cat cat, int price, boolean availability, String name, String color, String birth, String gender) {
+        cat.updateCat(price, availability, name, color, birth, gender);
     }
 
     public void deleteCat(List<Cat> cats, Cat cat) {

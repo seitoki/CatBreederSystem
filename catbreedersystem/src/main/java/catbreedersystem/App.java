@@ -19,7 +19,7 @@ public class App extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException {
         primaryStage.setTitle("Cat Breeder System Login");
-        scene = new Scene(loadFXML("loginView"), 640, 480);
+        scene = new Scene(loadFXML("adminView"), 640, 480);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
@@ -34,8 +34,8 @@ public class App extends Application {
     }
 
     public static void main(String[] args) throws SQLException {
-        // launch();
-        // DatabaseConnection.getConnection();
+        DatabaseConnection.connect();
+        launch();
     }
 
 }

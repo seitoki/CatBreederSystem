@@ -3,19 +3,31 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.TextField?>
 
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="catbreedersystem.ProfileController" spacing="10" alignment="CENTER">
-    <Label text="User Profile" style="-fx-font-size: 18;" />
+      fx:controller="catbreedersystem.ProfileController" spacing="10" alignment="TOP_CENTER" style="-fx-padding: 20; -fx-background-color: #f0f0f0;">
+    <Label text="User Profile" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #333;" />
 
-    <Label text="Name:" />
+    <HBox spacing="10" alignment="CENTER">
+        <Label text="Name:" style="-fx-font-size: 16px;"/>
+        <TextField fx:id="nameField" promptText="Enter name" style="-fx-pref-width: 200;"/>
+    </HBox>
     <!-- <TextField fx:id="nameField" /> -->
 
-    <Label text="Email:" />
+    <HBox spacing="10" alignment="CENTER">
+        <Label text="Email:" style="-fx-font-size: 16px;"/>
+        <TextField fx:id="emailField" promptText="Enter email" style="-fx-pref-width: 200;"/>
+    </HBox>
     <!-- <TextField fx:id="emailField" /> -->
 
-    <Label text="Phone:" />
+    <HBox spacing="10" alignment="CENTER">
+        <Label text="Phone:" style="-fx-font-size: 16px;"/>
+        <TextField fx:id="phoneField" promptText="Enter phone number" style="-fx-pref-width: 200;"/>
+    </HBox>
     <!-- <TextField fx:id="phoneField" /> -->
 
-    <Button text="Update Profile" onAction="#handleUpdateProfile" />
+    <Button text="Update Profile" onAction="#handleUpdateProfile"
+            style="-fx-font-size: 16px; -fx-background-color: #4CAF50; -fx-text-fill: white; -fx-background-radius: 5px;"/>
 </VBox>

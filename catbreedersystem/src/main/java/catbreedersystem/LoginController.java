@@ -13,6 +13,7 @@ public class LoginController {
     @FXML
     private TextField userIdField;
     //@FXML
+    @FXML
     private TextField emailField;
 
     @SuppressWarnings("exports")

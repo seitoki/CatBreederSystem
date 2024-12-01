@@ -4,19 +4,29 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox xmlns:fx="http://javafx.com/fxml/1" fx:controller="catbreedersystem.AdminController" spacing="10" alignment="CENTER">
-    <Label text="Admin Dashboard" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+<VBox xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="catbreedersystem.AdminController" spacing="10" alignment="CENTER" style="-fx-background-color: #f9f9f9; -fx-padding: 20;">
+    <Label text="Admin Dashboard" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2e2e2e;" />
 
-    <Button text="Add Cat" onAction="#handleAddCat" maxWidth="200"/>
-    <Button text="Delete Cat" onAction="#handleDeleteCat" maxWidth="200"/>
-    <Button text="Update Cat" onAction="#handleUpdateCat" maxWidth="200"/>
-    
-    <Label text="All Cats" style="-fx-font-size: 14px; -fx-font-weight: bold;" />
-    <ListView fx:id="catListView" maxWidth="300" maxHeight="150"/>
+    <Button text="Add Cat" onAction="#handleAddCat" maxWidth="200"
+            style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;">
+    </Button>
+    <Button text="Delete Cat" onAction="#handleDeleteCat" maxWidth="200"
+            style="-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;">
+    </Button>
+    <Button text="Update Cat" onAction="#handleUpdateCat" maxWidth="200"
+            style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;">
+    </Button>
 
-    <Label text="All Customers" style="-fx-font-size: 14px; -fx-font-weight: bold;" />
-    <ListView fx:id="customerListView" maxWidth="300" maxHeight="150"/>
+    <Label text="All Cats" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #333333;" />
+    <ListView fx:id="catListView" maxWidth="300" maxHeight="150"
+              style="-fx-border-color: #cccccc; -fx-border-width: 2; -fx-border-radius: 5; -fx-padding: 5;"/>
 
-    <Label text="All Reservations" style="-fx-font-size: 14px; -fx-font-weight: bold;" />
-    <ListView fx:id="reservationListView" maxWidth="300" maxHeight="150"/>
+    <Label text="All Customers" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #333333;" />
+    <ListView fx:id="customerListView" maxWidth="300" maxHeight="150"
+              style="-fx-border-color: #cccccc; -fx-border-width: 2; -fx-border-radius: 5; -fx-padding: 5;"/>
+
+    <Label text="All Reservations" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #333333;" />
+    <ListView fx:id="reservationListView" maxWidth="300" maxHeight="150"
+              style="-fx-border-color: #cccccc; -fx-border-width: 2; -fx-border-radius: 5; -fx-padding: 5;"/>
 </VBox>

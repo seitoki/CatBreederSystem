@@ -10,8 +10,6 @@ public class Customer extends User {
         super(id, name, email, phone, "Customer");
     }
 
-    
-
     public void updateProfile(String name, String email, String phone) {
         this.name = name;
         this.email = email;
@@ -39,15 +37,20 @@ public class Customer extends User {
     }
 
     public Reservation reserveCat(Cat cat, String dateString) {
-        if (cat.availability) {
-            Reservation reservation = new Reservation("R" + System.currentTimeMillis(), cat.catID, this.id, dateString);
-            this.reservations.add(reservation);
-            cat.availability = false;
-            return reservation;
-        } else {
+        if (!cat.availability) {
             System.out.println("Cat is not available!");
             return null;
         }
+    
+        Reservation reservation = new Reservation(
+            "R" + System.currentTimeMillis(),
+            cat.catID,
+            this.id,
+            dateString
+        );
+        this.reservations.add(reservation);
+        cat.availability = false;
+        return reservation;
     }
 
     public void cancelReservation(String resID) {
@@ -66,5 +69,21 @@ public class Customer extends User {
     @Override
     public void viewProfile() {
         System.out.println("Customer Profile: " + name + ", Email: " + email + ", Phone: " + phone);
+    }
+
+    public String getId() {
+        return this.id;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public String getEmail() {
+        return this.email;
+    }
+
+    public String getPhone() {
+        return this.phone;
     }
 } 

@@ -24,10 +24,18 @@ public class Reservation {
     }
 
     public String getReserveID() {
-        return reserveID;
+        return this.reserveID;
     }
 
     public String getCatID() {
         return this.catID;
+    }
+
+    public String getUserID() {
+        return this.userID;
+    }
+
+    public String getReserveDate() {
+        return this.reserveDate;
     }
 }

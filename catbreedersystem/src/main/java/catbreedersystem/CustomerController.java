@@ -12,6 +12,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 public class CustomerController {
@@ -21,6 +22,9 @@ public class CustomerController {
 
     @FXML
     private ListView<Reservation> myReservationsListView;
+
+    @FXML
+    private TextField searchField;
 
     private final ObservableList<Cat> availableCats = FXCollections.observableArrayList();
     private final ObservableList<Reservation> myReservations = FXCollections.observableArrayList();
@@ -146,6 +150,12 @@ public class CustomerController {
             stage.show();
         } catch (Exception e) {
         }
+    }
+
+    @FXML
+    private void handleSearchCats() {
+        String keyword = searchField.getText().toLowerCase();
+        availableCatsListView.setItems(availableCats.filtered(cat -> cat.toString().toLowerCase().contains(keyword)));
     }
 
     private void showAlert(String title, String message) {

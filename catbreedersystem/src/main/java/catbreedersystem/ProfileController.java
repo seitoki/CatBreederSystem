@@ -8,90 +8,103 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 public class ProfileController {
 
     @FXML
-    private Label idLabel;
+    private Label userNameLabel;
+
+    @FXML
+    private Label userEmailLabel;
+
+    @FXML
+    private Label userPhoneLabel;
 
     @FXML
     private TextField nameField;
 
     @FXML
     private TextField emailField;
-
+    
     @FXML
     private TextField phoneField;
 
-    private String userID = "0001";
+    private String userID;
 
-    public void initialize() {
+    public void setUserID(String userID) {
+        this.userID = userID;
         loadProfile();
     }
 
     private void loadProfile() {
-        try (Connection conn = DatabaseConnection.getConnection()) {
-            String query = "SELECT * FROM User WHERE userID = ?";
-            PreparedStatement stmt = conn.prepareStatement(query);
-            stmt.setString(1, userID);
+        String query = "SELECT name, email, phone FROM User WHERE userID = ?";
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, userID);
+            ResultSet resultSet = statement.executeQuery();
 
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                idLabel.setText(rs.getString("userID"));
-                nameField.setText(rs.getString("name"));
-                emailField.setText(rs.getString("email"));
-                phoneField.setText(rs.getString("phone"));
+            if (resultSet.next()) {
+                userNameLabel.setText("Name: " + resultSet.getString("name"));
+                userEmailLabel.setText("Email: " + resultSet.getString("email"));
+                userPhoneLabel.setText("Phone: " + resultSet.getString("phone"));
             }
         } catch (Exception e) {
-            showError("Error loading profile", e.getMessage());
         }
     }
 
     @FXML
     private void handleUpdateProfile() {
-        String name = nameField.getText();
-        String email = emailField.getText();
-        String phone = phoneField.getText();
+        String updatedName = nameField.getText().trim();
+        String updatedEmail = emailField.getText().trim();
+        String updatedPhone = phoneField.getText().trim();
 
-        if (name.isEmpty() || email.isEmpty() || phone.isEmpty()) {
-            showError("Validation Error", "All fields must be filled.");
+        if (updatedName.isEmpty() && updatedEmail.isEmpty() && updatedPhone.isEmpty()) {
+            showAlert("Validation Error", "Please fill at least one field to update.", Alert.AlertType.ERROR);
             return;
         }
 
-        try (Connection conn = DatabaseConnection.getConnection()) {
-            String updateQuery = "UPDATE User SET name = ?, email = ?, phone = ? WHERE userID = ?";
-            PreparedStatement stmt = conn.prepareStatement(updateQuery);
-            stmt.setString(1, name);
-            stmt.setString(2, email);
-            stmt.setString(3, phone);
-            stmt.setString(4, userID);
+        String query = "UPDATE User SET name = COALESCE(NULLIF(?, ''), name), " +
+                       "email = COALESCE(NULLIF(?, ''), email), " +
+                       "phone = COALESCE(NULLIF(?, ''), phone) WHERE userID = ?";
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
 
-            int rowsUpdated = stmt.executeUpdate();
-            if (rowsUpdated > 0) {
-                showInfo("Profile Updated", "Your profile has been updated successfully.");
+            statement.setString(1, updatedName);
+            statement.setString(2, updatedEmail);
+            statement.setString(3, updatedPhone);
+            statement.setString(4, userID);
+            
+            int rowsAffected = statement.executeUpdate();
+            if (rowsAffected > 0) {
+                showAlert("Success", "Profile updated successfully!", Alert.AlertType.INFORMATION);
+                loadProfile();
+                clearFields(nameField, emailField, phoneField);
             } else {
-                showError("Update Failed", "No changes were made to your profile.");
+                showAlert("Error", "No changes were made.", Alert.AlertType.WARNING);
             }
+
         } catch (Exception e) {
-            showError("Error updating profile", e.getMessage());
+            showAlert("Error", "Failed to update profile: " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
-    private void showError(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
+    private void clearFields(TextField... fields) {
+        for (TextField field : fields) {
+            field.clear();
+        }
     }
 
-    private void showInfo(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    @FXML
+    private void handleClose() {
+        Stage stage = (Stage) userNameLabel.getScene().getWindow();
+        stage.close();
+    }
+
+    private void showAlert(String title, String message, Alert.AlertType type) {
+        Alert alert = new Alert(type);
         alert.setTitle(title);
-        alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
     }
 }
-
-

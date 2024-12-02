@@ -1,39 +1,78 @@
 package catbreedersystem;
 
+import java.net.URL;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
+import java.util.ResourceBundle;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
-public class CustomerController {
+public class CustomerController implements Initializable{
+
+    // TableViews and Columns
+    @FXML
+    private TableView<Cat> availableCatsTable;
+    @FXML
+    private TableColumn<Cat, String> catIDColumn;
+    @FXML
+    private TableColumn<Cat, String> catNameColumn;
+    @FXML
+    private TableColumn<Cat, String> catGenderColumn;
+    @FXML
+    private TableColumn<Cat, Integer> catPriceColumn;
+    @FXML
+    private TableColumn<Cat, String> catBirthdateColumn;
+    @FXML
+    private TableColumn<Cat, String> catColorColumn;
 
     @FXML
-    private ListView<Cat> availableCatsListView;
-
+    private TableView<Reservation> reservationsTable;
     @FXML
-    private ListView<Reservation> myReservationsListView;
-
+    private TableColumn<Reservation, String> reservationIDColumn;
     @FXML
-    private TextField searchField;
+    private TableColumn<Reservation, String> reservedCatIDColumn;
+    @FXML
+    private TableColumn<Reservation, String> reservationDateColumn;
 
+    // ObservableLists
     private final ObservableList<Cat> availableCats = FXCollections.observableArrayList();
     private final ObservableList<Reservation> myReservations = FXCollections.observableArrayList();
-    private String currentUserID; 
 
-    public void initialize() {
-        availableCatsListView.setItems(availableCats);
-        myReservationsListView.setItems(myReservations);
+    // Current User ID (To be set when user logs in)
+    private String currentUserID = "0001";
 
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+  
+        // Initialize Available Cats Table
+        catIDColumn.setCellValueFactory(new PropertyValueFactory<>("catID"));
+        catNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        catBirthdateColumn.setCellValueFactory(new PropertyValueFactory<>("birthdate"));
+        catGenderColumn.setCellValueFactory(new PropertyValueFactory<>("gender"));
+        catColorColumn.setCellValueFactory(new PropertyValueFactory<>("color"));
+        catPriceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
+        availableCatsTable.setItems(availableCats);
+
+        // Initialize My Reservations Table
+        reservationIDColumn.setCellValueFactory(new PropertyValueFactory<>("reserveID"));
+        reservedCatIDColumn.setCellValueFactory(new PropertyValueFactory<>("catID"));
+        reservationDateColumn.setCellValueFactory(new PropertyValueFactory<>("reserveDate"));
+        reservationsTable.setItems(myReservations);
+
+        // Load Data
         loadAvailableCats();
         loadMyReservations();
     }
@@ -43,123 +82,166 @@ public class CustomerController {
     }
 
     private void loadAvailableCats() {
+        availableCats.clear();
+        String query = "SELECT * FROM Cat WHERE availability = true";
         try (Connection connection = DatabaseConnection.getConnection();
-             Statement statement = connection.createStatement()) {
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM Cat WHERE availability = true");
+             PreparedStatement statement = connection.prepareStatement(query);
+             ResultSet resultSet = statement.executeQuery()) {
+
             while (resultSet.next()) {
                 Cat cat = new Cat(
-                    resultSet.getString("catID"),
-                    resultSet.getString("name"),
-                    resultSet.getString("birthdate"),
-                    resultSet.getString("gender"),
-                    resultSet.getString("color"),
-                    resultSet.getInt("price"),
-                    resultSet.getBoolean("availability")
+                        resultSet.getString("catID"),
+                        resultSet.getString("name"),
+                        resultSet.getString("birthdate"),
+                        resultSet.getString("gender"),
+                        resultSet.getString("color"),
+                        resultSet.getInt("price"),
+                        resultSet.getBoolean("availability")
                 );
                 availableCats.add(cat);
             }
         } catch (Exception e) {
-            showAlert("Error", "Failed to load available cats: " + e.getMessage());
+            showAlert("Error", "Failed to load available cats: " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
     private void loadMyReservations() {
+        myReservations.clear();
+        String query = "SELECT r.reserveID, r.catID, r.reserveDate FROM Reservation r WHERE r.userID = ?";
         try (Connection connection = DatabaseConnection.getConnection();
-             Statement statement = connection.createStatement()) {
-            String query = "SELECT r.reserveID, r.catID, r.reserveDate, c.name " +
-                           "FROM Reservation r " +
-                           "JOIN Cat c ON r.catID = c.catID " +
-                           "WHERE r.userID = '" + currentUserID + "'";
-            ResultSet resultSet = statement.executeQuery(query);
+             PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, currentUserID);
+            ResultSet resultSet = statement.executeQuery();
+
             while (resultSet.next()) {
                 Reservation reservation = new Reservation(
-                    resultSet.getString("reserveID"),
-                    resultSet.getString("catID"),
-                    currentUserID,
-                    resultSet.getDate("reserveDate").toString()
+                        resultSet.getString("reserveID"),
+                        resultSet.getString("catID"),
+                        currentUserID,
+                        resultSet.getString("reserveDate")
                 );
                 myReservations.add(reservation);
             }
         } catch (Exception e) {
-            showAlert("Error", "Failed to load reservations: " + e.getMessage());
+            showAlert("Error", "Failed to load reservations: " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
     @FXML
     private void handleReserveCat() {
-        Cat selectedCat = availableCatsListView.getSelectionModel().getSelectedItem();
-        if (selectedCat != null) {
-            try (Connection connection = DatabaseConnection.getConnection();
-                 Statement statement = connection.createStatement()) {
-                String reserveID = "R" + (myReservations.size() + 1);
-                String query = "INSERT INTO Reservation (reserveID, catID, userID, reserveDate) VALUES " +
-                               "('" + reserveID + "', '" + selectedCat.getCatID() + "', '" + currentUserID + "', CURDATE())";
-                statement.executeUpdate(query);
+        Cat selectedCat = availableCatsTable.getSelectionModel().getSelectedItem();
+        if (selectedCat == null) {
+            showAlert("Error", "Please select a cat to reserve.", Alert.AlertType.ERROR);
+            return;
+        }
 
-                Reservation newReservation = new Reservation(
-                    reserveID,
-                    selectedCat.getCatID(),
-                    currentUserID,
-                    java.time.LocalDate.now().toString()
-                );
-                myReservations.add(newReservation);
-                availableCats.remove(selectedCat);
+        // Ask for reservation date
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Enter Reservation Date");
+        dialog.setHeaderText("Reserve Cat: " + selectedCat.getName());
+        dialog.setContentText("Enter Reservation Date (YYYY-MM-DD):");
+        String reservationDate = dialog.showAndWait().orElse("");
 
-                statement.executeUpdate("UPDATE Cat SET availability = false WHERE catID = '" + selectedCat.getCatID() + "'");
+        if (reservationDate.trim().isEmpty()) {
+            showAlert("Error", "Reservation date cannot be empty.", Alert.AlertType.ERROR);
+            return;
+        }
 
-                showAlert("Success", "Cat reserved successfully!");
-            } catch (Exception e) {
-                showAlert("Error", "Failed to reserve cat: " + e.getMessage());
-            }
-        } else {
-            showAlert("No Selection", "Please select a cat to reserve.");
+        String newReserveID = generateReservationID();
+        String query = "INSERT INTO Reservation (reserveID, catID, userID, reserveDate) VALUES (?, ?, ?, ?)";
+        String updateQuery = "UPDATE Cat SET availability = false WHERE catID = ?";
+
+        try (Connection connection = DatabaseConnection.getConnection();
+            PreparedStatement insertStatement = connection.prepareStatement(query);
+            PreparedStatement updateStatement = connection.prepareStatement(updateQuery)) {
+
+            // Insert reservation
+            insertStatement.setString(1, newReserveID);
+            insertStatement.setString(2, selectedCat.getCatID());
+            insertStatement.setString(3, currentUserID);
+            insertStatement.setString(4, reservationDate);
+            insertStatement.executeUpdate();
+
+            // Update cat availability
+            updateStatement.setString(1, selectedCat.getCatID());
+            updateStatement.executeUpdate();
+
+            showAlert("Success", "Reservation successful!", Alert.AlertType.INFORMATION);
+            loadAvailableCats();
+            loadMyReservations();
+        } catch (Exception e) {
+            showAlert("Error", "Failed to reserve cat: " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
+
+
+    private String generateReservationID() {
+        String query = "SELECT reserveID FROM Reservation ORDER BY reserveID DESC LIMIT 1";
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query);
+             ResultSet resultSet = statement.executeQuery()) {
+            if (resultSet.next()) {
+                String lastID = resultSet.getString("reserveID");
+                int lastNumber = Integer.parseInt(lastID.substring(1));
+                return String.format("R%04d", lastNumber + 1);
+            }
+        } catch (Exception e) {
+        }
+        return "R0000";
+    }
+    
 
     @FXML
     private void handleCancelReservation() {
-        Reservation selectedReservation = myReservationsListView.getSelectionModel().getSelectedItem();
-        if (selectedReservation != null) {
-            try (Connection connection = DatabaseConnection.getConnection();
-                 Statement statement = connection.createStatement()) {
-                String query = "DELETE FROM Reservation WHERE reserveID = '" + selectedReservation.getReserveID() + "'";
-                statement.executeUpdate(query);
+        Reservation selectedReservation = reservationsTable.getSelectionModel().getSelectedItem();
+        if (selectedReservation == null) {
+            showAlert("Error", "Please select a reservation to cancel.", Alert.AlertType.ERROR);
+            return;
+        }
 
-                myReservations.remove(selectedReservation);
+        String query = "DELETE FROM Reservation WHERE reserveID = ?";
+        String updateQuery = "UPDATE Cat SET availability = true WHERE catID = ?";
 
-                statement.executeUpdate("UPDATE Cat SET availability = true WHERE catID = '" + selectedReservation.getCatID() + "'");
-                showAlert("Success", "Reservation cancelled successfully!");
-            } catch (Exception e) {
-                showAlert("Error", "Failed to cancel reservation: " + e.getMessage());
-            }
-        } else {
-            showAlert("No Selection", "Please select a reservation to cancel.");
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement deleteStatement = connection.prepareStatement(query);
+             PreparedStatement updateStatement = connection.prepareStatement(updateQuery)) {
+
+            // Delete reservation
+            deleteStatement.setString(1, selectedReservation.getReserveID());
+            deleteStatement.executeUpdate();
+
+            // Update cat availability
+            updateStatement.setString(1, selectedReservation.getCatID());
+            updateStatement.executeUpdate();
+
+            showAlert("Success", "Reservation cancelled successfully!", Alert.AlertType.INFORMATION);
+            loadAvailableCats();
+            loadMyReservations();
+        } catch (Exception e) {
+            showAlert("Error", "Failed to cancel reservation: " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
-
     @FXML
-    public void handleViewProfile(ActionEvent event) {
+    private void handleViewProfile() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("profileview.fxml"));
-            Scene scene = new Scene(loader.load());
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("profileView.fxml"));
+            Parent profileView = loader.load();
+
+            ProfileController profileController = loader.getController();
+            profileController.setUserID(currentUserID);
 
             Stage stage = new Stage();
-            stage.setTitle("Profile View");
-            stage.setScene(scene);
+            stage.setTitle("My Profile");
+            stage.setScene(new Scene(profileView));
             stage.show();
         } catch (Exception e) {
+            showAlert("Error", "Failed to load profile view: " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
-    @FXML
-    private void handleSearchCats() {
-        String keyword = searchField.getText().toLowerCase();
-        availableCatsListView.setItems(availableCats.filtered(cat -> cat.toString().toLowerCase().contains(keyword)));
-    }
-
-    private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    private void showAlert(String title, String message, Alert.AlertType type) {
+        Alert alert = new Alert(type);
         alert.setTitle(title);
         alert.setContentText(message);
         alert.showAndWait();

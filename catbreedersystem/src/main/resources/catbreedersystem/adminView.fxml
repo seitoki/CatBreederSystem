@@ -17,48 +17,48 @@
     <!-- Add / Update / Delete Section -->
     <HBox spacing="20" alignment="CENTER">
         <VBox spacing="10" alignment="CENTER">
-            <Label text="Add New Cat" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #4CAF50;" />
-            <Button text="Add Cat" onAction="#toggleAddCatFields" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;" maxWidth="200" />
-            <VBox fx:id="addCatFields" spacing="8" visible="false" managed="false" style="-fx-padding: 10; -fx-background-color: #e8f5e9; -fx-border-color: #4CAF50; -fx-border-radius: 5;">
-                <TextField fx:id="catNameField" promptText="Cat Name" />
-                <TextField fx:id="catBirthdateField" promptText="Cat Birthdate (YYYY-MM-DD)" />
-                <TextField fx:id="catGenderField" promptText="Cat Gender (Male/Female)" />
-                <TextField fx:id="catColorField" promptText="Cat Color" />
-                <TextField fx:id="catPriceField" promptText="Cat Price" />
-                <Button text="Submit New Cat" onAction="#handleAddCat" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;" maxWidth="200" />
+            <Label text="Add New Cat" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #F3C462;" />
+            <Button text="Add Cat" onAction="#toggleAddCatFields" style="-fx-background-color: #FCECC9; -fx-text-fill: #2e2e2e; -fx-font-weight: bold; -fx-background-radius: 5;" maxWidth="200" />
+            <VBox fx:id="addCatFields" spacing="8" visible="false" managed="false" style="-fx-padding: 10; -fx-background-color: #FCECC9; -fx-border-color: #FCECC9; -fx-border-radius: 5;">
+                <TextField fx:id="catNameField" promptText="New Cat Name" />
+                <TextField fx:id="catBirthdateField" promptText="New Cat Birthdate (YYYY-MM-DD)" />
+                <TextField fx:id="catGenderField" promptText="New Cat Gender (Male/Female)" />
+                <TextField fx:id="catColorField" promptText="New Cat Color" />
+                <TextField fx:id="catPriceField" promptText="New Cat Price" />
+                <Button text="Submit New Cat" onAction="#handleAddCat" style="-fx-background-color: #62baac; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;" maxWidth="200" />
             </VBox>
         </VBox>
 
         <!-- Add User Section -->
         <VBox spacing="10" alignment="CENTER">
-            <Label text="Add New User" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #673AB7;" />
-            <Button text="Add User" onAction="#toggleAddUserFields" style="-fx-background-color: #673AB7; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;" maxWidth="200" />
-            <VBox fx:id="addUserFields" spacing="8" visible="false" managed="false" style="-fx-padding: 10; -fx-background-color: #EDE7F6; -fx-border-color: #673AB7; -fx-border-radius: 5;">
+            <Label text="Add New User" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #F97C8B;" />
+            <Button text="Add User" onAction="#toggleAddUserFields" style="-fx-background-color: #FCB0B3; -fx-text-fill: #2e2e2e; -fx-font-weight: bold; -fx-background-radius: 5;" maxWidth="200" />
+            <VBox fx:id="addUserFields" spacing="8" visible="false" managed="false" style="-fx-padding: 10; -fx-background-color: #FCB0B3; -fx-border-color: #FCB0B3; -fx-border-radius: 5;">
                 <TextField fx:id="userNameField" promptText="Name" />
                 <TextField fx:id="userEmailField" promptText="Email" />
                 <TextField fx:id="userPhoneField" promptText="Phone" />
                 <TextField fx:id="userRoleField" promptText="Role (admin/customer)" />
-                <Button text="Submit New User" onAction="#handleAddUser" style="-fx-background-color: #673AB7; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;" maxWidth="200" />
+                <Button text="Submit New User" onAction="#handleAddUser" style="-fx-background-color: #62baac; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;" maxWidth="200" />
             </VBox>
         </VBox>
 
         <VBox spacing="10" alignment="CENTER">
             <Label text="Update Existing Cat" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2196F3;" />
-            <Button text="Update Cat" onAction="#toggleUpdateCatFields" style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;" maxWidth="200" />
-            <VBox fx:id="updateCatFields" spacing="8" visible="false" managed="false" style="-fx-padding: 10; -fx-background-color: #e3f2fd; -fx-border-color: #2196F3; -fx-border-radius: 5;">
-                <Button text="Load Cat Details" onAction="#populateUpdateFields" style="-fx-background-color: #64B5F6; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;" maxWidth="200" />
-                <TextField fx:id="updateCatNameField" promptText="New Cat Name" />
-                <TextField fx:id="updateCatBirthdateField" promptText="New Cat Birthdate (YYYY-MM-DD)" />
-                <TextField fx:id="updateCatGenderField" promptText="New Cat Gender (Male/Female)" />
-                <TextField fx:id="updateCatColorField" promptText="New Cat Color" />
-                <TextField fx:id="updateCatPriceField" promptText="New Cat Price" />
-                <Button text="Submit Updates" onAction="#handleUpdateCat" style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;" maxWidth="200" />
+            <Button text="Update Cat" onAction="#toggleUpdateCatFields" style="-fx-background-color: #7EB2DD; -fx-text-fill: #2e2e2e; -fx-font-weight: bold; -fx-background-radius: 5;" maxWidth="200" />
+            <VBox fx:id="updateCatFields" spacing="8" visible="false" managed="false" style="-fx-padding: 10; -fx-background-color: #7EB2DD; -fx-border-color: #7EB2DD; -fx-border-radius: 5;">
+                <Button text="Load Cat Details" onAction="#populateUpdateFields" style="-fx-background-color: #445E93; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;" maxWidth="200" />
+                <TextField fx:id="updateCatNameField" promptText="Cat Name" />
+                <TextField fx:id="updateCatBirthdateField" promptText="Cat Birthdate (YYYY-MM-DD)" />
+                <TextField fx:id="updateCatGenderField" promptText="Cat Gender (Male/Female)" />
+                <TextField fx:id="updateCatColorField" promptText="Cat Color" />
+                <TextField fx:id="updateCatPriceField" promptText="Cat Price" />
+                <Button text="Submit Updates" onAction="#handleUpdateCat" style="-fx-background-color: #62baac; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;" maxWidth="200" />
             </VBox>
         </VBox>
 
         <VBox spacing="10" alignment="CENTER">
             <Label text="Delete Cat" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #f44336;" />
-            <Button text="Delete Cat" onAction="#handleDeleteCat" style="-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;" maxWidth="200" />
+            <Button text="Delete Cat" onAction="#handleDeleteCat" style="-fx-background-color: #F93943; -fx-text-fill: #2e2e2e; -fx-font-weight: bold; -fx-background-radius: 5;" maxWidth="200" />
         </VBox>
     </HBox>
 

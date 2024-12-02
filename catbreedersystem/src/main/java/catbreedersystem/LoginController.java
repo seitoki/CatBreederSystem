@@ -23,7 +23,8 @@ public class LoginController {
 
     private final String jdbcUrl = "jdbc:mysql://localhost:3306/cat_breeder_system"; // Replace with your database URL
     private final String dbUsername = "root"; // Replace with your MySQL username
-    private final String dbPassword = "oyrq1206"; // Replace with your MySQL password
+    private final String dbPassword = "12345678"; // Replace with your MySQL
+    // password
 
     @FXML
     private void handleLogin() {

@@ -8,13 +8,15 @@
 
 <VBox xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="catbreedersystem.CustomerController"
-      spacing="20" alignment="TOP_CENTER" style="-fx-padding: 20; -fx-background-color: #f5f5f5;">
-    
-    <!-- Customer Dashboard Title -->
-    <Label text="Customer Dashboard" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #333;" />
+      spacing="20" alignment="TOP_CENTER"
+      style="-fx-background-image: url('https://images.unsplash.com/photo-1595752776689-aebef37b5d32'); -fx-background-size: cover; -fx-background-position: center center; -fx-padding: 20;">
+
+    <Label text="My Page"
+           style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #333;" />
 
     <Button text="My Profile" onAction="#handleViewProfile"
-            style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;"
+            style="-fx-background-color: #896A67; -fx-text-fill: #333; -fx-font-weight: bold; -fx-background-radius: 10;
+               -fx-padding: 10px 20px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 10, 0.5, 0, 5);"
             maxWidth="200" />
 
     <!-- Table Section -->
@@ -22,7 +24,8 @@
         <!-- Available Cats -->
         <VBox spacing="10" alignment="CENTER">
             <Label text="Available Cats" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #4CAF50;" />
-            <TableView fx:id="availableCatsTable" maxWidth="600" maxHeight="300" style="-fx-border-color: #4CAF50; -fx-border-radius: 5;">
+            <TableView fx:id="availableCatsTable" maxWidth="500"
+                       maxHeight="300" style="-fx-border-color: #4CAF50; -fx-border-radius: 5;">
                 <columns>
                     <TableColumn text="Cat ID" fx:id="catIDColumn" />
                     <TableColumn text="Name" fx:id="catNameColumn" />
@@ -38,7 +41,8 @@
         <!-- My Reservations -->
         <VBox spacing="10" alignment="CENTER">
             <Label text="My Reservations" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2196F3;" />
-            <TableView fx:id="reservationsTable" maxWidth="600" maxHeight="300" style="-fx-border-color: #2196F3; -fx-border-radius: 5;">
+            <TableView fx:id="reservationsTable" maxWidth="500"
+                       maxHeight="300" style="-fx-border-color: #2196F3; -fx-border-radius: 5;">
                <columns> 
                 <TableColumn text="Reservation ID" fx:id="reservationIDColumn" />
                 <TableColumn text="Cat ID" fx:id="reservedCatIDColumn" />

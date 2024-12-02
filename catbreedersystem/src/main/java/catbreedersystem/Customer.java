@@ -10,10 +10,7 @@ public class Customer extends User {
         super(id, name, email, phone, "Customer");
     }
 
-    @Override
-    public void viewProfile() {
-        System.out.println("Customer Profile: " + name + ", Email: " + email + ", Phone: " + phone);
-    }
+    
 
     public void updateProfile(String name, String email, String phone) {
         this.name = name;
@@ -60,4 +57,14 @@ public class Customer extends User {
     public List<Reservation> getReservations() {
         return reservations;
     }
-}
+
+    @Override
+    public String toString() {
+        return "Customer{CustomerID=" + id + ", name=" + name + ", Email=" + email + ", Phone=" + phone + "}";
+    }
+
+    @Override
+    public void viewProfile() {
+        System.out.println("Customer Profile: " + name + ", Email: " + email + ", Phone: " + phone);
+    }
+} 

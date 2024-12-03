@@ -19,7 +19,7 @@ public class App extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException {
         primaryStage.setTitle("Cat Breeder System Login");
-        scene = new Scene(loadFXML("longinView"), 800, 800);
+        scene = new Scene(loadFXML("loginView"), 800, 800);
         primaryStage.setScene(scene);
         primaryStage.setMinWidth(800);
         primaryStage.setMinHeight(800);

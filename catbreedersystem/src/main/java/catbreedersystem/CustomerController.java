@@ -52,11 +52,10 @@ public class CustomerController implements Initializable{
     private final ObservableList<Reservation> myReservations = FXCollections.observableArrayList();
 
     // Current User ID (To be set when user logs in)
-    private String currentUserID = "0001";
+    private String currentUserID;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-  
         // Initialize Available Cats Table
         catIDColumn.setCellValueFactory(new PropertyValueFactory<>("catID"));
         catNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -105,7 +104,7 @@ public class CustomerController implements Initializable{
         }
     }
 
-    private void loadMyReservations() {
+    void loadMyReservations() {
         myReservations.clear();
         String query = "SELECT r.reserveID, r.catID, r.reserveDate FROM Reservation r WHERE r.userID = ?";
         try (Connection connection = DatabaseConnection.getConnection();

@@ -1,5 +1,6 @@
 package catbreedersystem;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -21,10 +22,9 @@ public class LoginController {
     @FXML
     private TextField emailField;
 
-    private final String jdbcUrl = "jdbc:mysql://localhost:3306/cat_breeder_system"; // Replace with your database URL
-    private final String dbUsername = "root"; // Replace with your MySQL username
-    private final String dbPassword = "oyrq1206"; // Replace with your MySQL
-    // password
+    private final String jdbcUrl = "jdbc:mysql://localhost:3306/cat_breeder_system"; 
+    private final String USERNAME = "root"; 
+    private final String PWD = "oyrq1206"; 
 
     @FXML
     private void handleLogin() {
@@ -36,7 +36,7 @@ public class LoginController {
             return;
         }
     
-        try (Connection connection = DriverManager.getConnection(jdbcUrl, dbUsername, dbPassword)) {
+        try (Connection connection = DriverManager.getConnection(jdbcUrl, USERNAME, PWD)) {
             String query = "SELECT role FROM User WHERE userID = ? AND email = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 preparedStatement.setString(1, userID);
@@ -84,13 +84,11 @@ public class LoginController {
             stage.setScene(new Scene(root));
             stage.setTitle(title);
             stage.show();
-        } catch (Exception e) {
+        } catch (IOException e) {
             showAlert(Alert.AlertType.ERROR, "Error", "Failed to load the view: " + e.getMessage());
         }
     }
     
-
-    // Helper method to show alert messages
     private void showAlert(AlertType alertType, String title, String content) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);

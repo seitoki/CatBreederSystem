@@ -1,5 +1,6 @@
 package catbreedersystem;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -22,7 +23,6 @@ import javafx.stage.Stage;
 
 public class CustomerController implements Initializable{
 
-    // TableViews and Columns
     @FXML
     private TableView<Cat> availableCatsTable;
     @FXML
@@ -37,7 +37,6 @@ public class CustomerController implements Initializable{
     private TableColumn<Cat, String> catBirthdateColumn;
     @FXML
     private TableColumn<Cat, String> catColorColumn;
-
     @FXML
     private TableView<Reservation> reservationsTable;
     @FXML
@@ -47,16 +46,13 @@ public class CustomerController implements Initializable{
     @FXML
     private TableColumn<Reservation, String> reservationDateColumn;
 
-    // ObservableLists
     private final ObservableList<Cat> availableCats = FXCollections.observableArrayList();
     private final ObservableList<Reservation> myReservations = FXCollections.observableArrayList();
 
-    // Current User ID (To be set when user logs in)
     private String currentUserID;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        // Initialize Available Cats Table
         catIDColumn.setCellValueFactory(new PropertyValueFactory<>("catID"));
         catNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         catBirthdateColumn.setCellValueFactory(new PropertyValueFactory<>("birthdate"));
@@ -65,13 +61,11 @@ public class CustomerController implements Initializable{
         catPriceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
         availableCatsTable.setItems(availableCats);
 
-        // Initialize My Reservations Table
         reservationIDColumn.setCellValueFactory(new PropertyValueFactory<>("reserveID"));
         reservedCatIDColumn.setCellValueFactory(new PropertyValueFactory<>("catID"));
         reservationDateColumn.setCellValueFactory(new PropertyValueFactory<>("reserveDate"));
         reservationsTable.setItems(myReservations);
 
-        // Load Data
         loadAvailableCats();
         loadMyReservations();
     }
@@ -134,7 +128,6 @@ public class CustomerController implements Initializable{
             return;
         }
 
-        // Ask for reservation date
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle("Enter Reservation Date");
         dialog.setHeaderText("Reserve Cat: " + selectedCat.getName());
@@ -154,14 +147,12 @@ public class CustomerController implements Initializable{
             PreparedStatement insertStatement = connection.prepareStatement(query);
             PreparedStatement updateStatement = connection.prepareStatement(updateQuery)) {
 
-            // Insert reservation
             insertStatement.setString(1, newReserveID);
             insertStatement.setString(2, selectedCat.getCatID());
             insertStatement.setString(3, currentUserID);
             insertStatement.setString(4, reservationDate);
             insertStatement.executeUpdate();
 
-            // Update cat availability
             updateStatement.setString(1, selectedCat.getCatID());
             updateStatement.executeUpdate();
 
@@ -205,11 +196,9 @@ public class CustomerController implements Initializable{
              PreparedStatement deleteStatement = connection.prepareStatement(query);
              PreparedStatement updateStatement = connection.prepareStatement(updateQuery)) {
 
-            // Delete reservation
             deleteStatement.setString(1, selectedReservation.getReserveID());
             deleteStatement.executeUpdate();
 
-            // Update cat availability
             updateStatement.setString(1, selectedReservation.getCatID());
             updateStatement.executeUpdate();
 
@@ -234,7 +223,7 @@ public class CustomerController implements Initializable{
             stage.setTitle("My Profile");
             stage.setScene(new Scene(profileView));
             stage.show();
-        } catch (Exception e) {
+        } catch (IOException e) {
             showAlert("Error", "Failed to load profile view: " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }

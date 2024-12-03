@@ -33,10 +33,6 @@ public class Cat {
         this.gender = newGender;
     }
 
-    private boolean isUniqueCatID(String id) {
-        return cats.stream().noneMatch(cat -> cat.catID.equals(id));
-    }
-
     @Override
     public String toString() {
         return "Cat{catID=" + catID + ", name=" + name + ", birthdate=" + birthdate + ", gender=" + gender + 

@@ -19,8 +19,6 @@ import javafx.scene.layout.VBox;
 
 public class AdminController implements Initializable{
 
-    // TableViews and Columns
-    // Cats Table
     @FXML
     private TableView<Cat> catTableView;
     @FXML
@@ -37,8 +35,6 @@ public class AdminController implements Initializable{
     private TableColumn<Cat, Integer> catPriceColumn;
     @FXML
     private TableColumn<Cat, Boolean> catAvailabilityColumn;
-
-    // Customers Table
     @FXML
     private TableView<Customer> customerTableView;
     @FXML
@@ -49,8 +45,6 @@ public class AdminController implements Initializable{
     private TableColumn<Customer, String> customerEmailColumn;
     @FXML
     private TableColumn<Customer, String> customerPhoneColumn;
-
-    // Reservations Table
     @FXML
     private TableView<Reservation> reservationTableView;
     @FXML
@@ -61,8 +55,6 @@ public class AdminController implements Initializable{
     private TableColumn<Reservation, String> reserveCustomerIDColumn;
     @FXML
     private TableColumn<Reservation, String> reserveDateColumn;
-
-    // Input Fields for Add/Update
     @FXML
     private VBox addCatFields;
     @FXML
@@ -87,7 +79,6 @@ public class AdminController implements Initializable{
     private TextField updateCatColorField;
     @FXML
     private TextField updateCatPriceField;
-
     @FXML
     private VBox addUserFields;
     @FXML
@@ -99,7 +90,6 @@ public class AdminController implements Initializable{
     @FXML
     private TextField userRoleField;
 
-    // ObservableLists for holding data
     private final ObservableList<Cat> cats = FXCollections.observableArrayList();
     private final ObservableList<Customer> customers = FXCollections.observableArrayList();
     private final ObservableList<Reservation> reservations = FXCollections.observableArrayList();
@@ -130,12 +120,9 @@ public class AdminController implements Initializable{
         reserveDateColumn.setCellValueFactory(new PropertyValueFactory<>("reserveDate"));
         reservationTableView.setItems(reservations);
 
-        // Load data
         loadCats();
         loadCustomers();
         loadReservations();
-
-
     }
 
     // Toggle Visibility of Add/Update Fields
@@ -185,7 +172,7 @@ public class AdminController implements Initializable{
     
         // Validate price (ensure it's numeric)
         try {
-            Integer.parseInt(priceField.getText().trim());
+            Integer.valueOf(priceField.getText().trim());
         } catch (NumberFormatException e) {
             showAlert("Validation Error", "Price must be numeric!", Alert.AlertType.ERROR);
             return false;
@@ -197,10 +184,9 @@ public class AdminController implements Initializable{
             return false;
         }
     
-        return true; // Validation passed
+        return true;
     }
     
-    // Add a New Cat
     @FXML
     private void handleAddCat() {
         if (!validateCatFields(catNameField, catBirthdateField, catGenderField, catColorField, catPriceField)) return;
@@ -272,7 +258,7 @@ public class AdminController implements Initializable{
             return;
         }
     
-        String newUserID = generateUserID(); // Generate the next user ID
+        String newUserID = generateUserID(); 
     
         String query = "INSERT INTO User (userID, name, email, phone, role) VALUES (?, ?, ?, ?, ?)";
     
@@ -288,7 +274,7 @@ public class AdminController implements Initializable{
     
             showAlert("Success", "User added successfully with ID: " + newUserID, Alert.AlertType.INFORMATION);
             clearFields(userNameField, userEmailField, userPhoneField, userRoleField);
-            loadCustomers(); // Reload customers table to reflect the change
+            loadCustomers(); 
         } catch (Exception e) {
             showAlert("Error", "Failed to add user: " + e.getMessage(), Alert.AlertType.ERROR);
         }
@@ -311,8 +297,6 @@ public class AdminController implements Initializable{
         return "0001"; 
     }
 
-    
-    // Update Selected Cat
     @FXML
     private void handleUpdateCat() {
         Cat selectedCat = catTableView.getSelectionModel().getSelectedItem();
@@ -347,6 +331,7 @@ public class AdminController implements Initializable{
             showAlert("Error", "Failed to update cat: " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
+
     @FXML
     public void populateUpdateFields() {
         Cat selectedCat = catTableView.getSelectionModel().getSelectedItem();
@@ -362,7 +347,6 @@ public class AdminController implements Initializable{
         updateCatPriceField.setText(String.valueOf(selectedCat.getPrice()));
     }
 
-    
     private void loadCats() {
         cats.clear();
         String query = "SELECT * FROM Cat";
@@ -427,9 +411,6 @@ public class AdminController implements Initializable{
         }
     }
     
-
-
-    // Utility Methods
     private void clearFields(TextField... fields) {
         for (TextField field : fields) {
             field.clear();

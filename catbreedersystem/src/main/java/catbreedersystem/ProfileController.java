@@ -54,6 +54,7 @@ public class ProfileController {
     }
 
     @FXML
+    @SuppressWarnings("unused")
     private void handleUpdateProfile() {
         String updatedName = nameField.getText().trim();
         String updatedEmail = emailField.getText().trim();
